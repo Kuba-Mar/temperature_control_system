@@ -14,9 +14,8 @@ namespace serial_port_communication
     public partial class Form1 : Form
     {
         System.IO.Ports.SerialPort serialPort;
-        delegate void delegate1();
-        delegate1 mydelegate;
-
+        
+   
         public Form1()
         {
             InitializeComponent();
@@ -24,34 +23,15 @@ namespace serial_port_communication
             serialPort.ReadTimeout = 500;
             serialPort.WriteTimeout = 500;
 
-            serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
-            mydelegate = new delegate1(displayReceived);
-
-        }
-        private void displayReceived(/*object sender, SerialDataReceivedEventArgs e*/)
-        {
-            string message = "";
-            try
-            {
-                message = serialPort.ReadLine();
-            }
-            catch (Exception ex)
-            {
-                message = "Receiving message goes wrong";
-            }
         }
 
-        void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
-        {
-            ReceivedTextBox.Invoke(mydelegate);
-        }
+
         private void Connect_button_Click(object sender, EventArgs e)
         {
-            
+            Connect_button.BackColor = Color.Green;
             if (serialPort.IsOpen)
             {
                 MessageBox.Show("Already connected to the device");
-                Connect_button.BackColor = Color.Green;
             }
             else
                 try
@@ -69,7 +49,18 @@ namespace serial_port_communication
                     Connect_button.BackColor = Color.Red;
                 }
         }
- 
+        private void Read_button_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ReceivedTextBox.Text = serialPort.ReadLine();
+            }
+            catch (TimeoutException)
+            {
+                ReceivedTextBox.Text = "Timeout Exception";
+            }
+        }
+
         private void Send_button_Click(object sender, EventArgs e)
         {
             serialPort.WriteLine(SendTextBox.Text);

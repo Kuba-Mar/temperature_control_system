@@ -605,6 +605,18 @@
   <data name="&gt;&gt;SendTextBox.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="&gt;&gt;Read_button.Name" xml:space="preserve">
+    <value>Read_button</value>
+  </data>
+  <data name="&gt;&gt;Read_button.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Read_button.Parent" xml:space="preserve">
+    <value>groupBox2</value>
+  </data>
+  <data name="&gt;&gt;Read_button.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="&gt;&gt;ReceivedTextBox.Name" xml:space="preserve">
     <value>ReceivedTextBox</value>
   </data>
@@ -615,7 +627,7 @@
     <value>groupBox2</value>
   </data>
   <data name="&gt;&gt;ReceivedTextBox.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="groupBox2.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 9.75pt</value>
@@ -642,6 +654,54 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;groupBox2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="Read_button.Location" type="System.Drawing.Point, System.Drawing">
+    <value>148, 203</value>
+  </data>
+  <data name="Read_button.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="Read_button.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="Read_button.Text" xml:space="preserve">
+    <value>Read</value>
+  </data>
+  <data name="&gt;&gt;Read_button.Name" xml:space="preserve">
+    <value>Read_button</value>
+  </data>
+  <data name="&gt;&gt;Read_button.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Read_button.Parent" xml:space="preserve">
+    <value>groupBox2</value>
+  </data>
+  <data name="&gt;&gt;Read_button.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="ReceivedTextBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 19</value>
+  </data>
+  <data name="ReceivedTextBox.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ReceivedTextBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>221, 178</value>
+  </data>
+  <data name="ReceivedTextBox.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;ReceivedTextBox.Name" xml:space="preserve">
+    <value>ReceivedTextBox</value>
+  </data>
+  <data name="&gt;&gt;ReceivedTextBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ReceivedTextBox.Parent" xml:space="preserve">
+    <value>groupBox2</value>
+  </data>
+  <data name="&gt;&gt;ReceivedTextBox.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="Clear_button.Font" type="System.Drawing.Font, System.Drawing">
@@ -674,30 +734,6 @@
   <metadata name="serialPort1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="ReceivedTextBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 19</value>
-  </data>
-  <data name="ReceivedTextBox.Multiline" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="ReceivedTextBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>221, 178</value>
-  </data>
-  <data name="ReceivedTextBox.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;ReceivedTextBox.Name" xml:space="preserve">
-    <value>ReceivedTextBox</value>
-  </data>
-  <data name="&gt;&gt;ReceivedTextBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ReceivedTextBox.Parent" xml:space="preserve">
-    <value>groupBox2</value>
-  </data>
-  <data name="&gt;&gt;ReceivedTextBox.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
