@@ -47,10 +47,9 @@ namespace serial_port_communication
             this.Send_button = new System.Windows.Forms.Button();
             this.SendTextBox = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.Read_button = new System.Windows.Forms.Button();
-            this.ReceivedTextBox = new System.Windows.Forms.TextBox();
             this.Clear_button = new System.Windows.Forms.Button();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
+            this.ReceivedTextBox = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -149,7 +148,7 @@ namespace serial_port_communication
             // 
             // Connect_button
             // 
-            this.Connect_button.BackColor = System.Drawing.Color.Green;
+            this.Connect_button.BackColor = System.Drawing.SystemColors.Control;
             resources.ApplyResources(this.Connect_button, "Connect_button");
             this.Connect_button.Name = "Connect_button";
             this.Connect_button.UseVisualStyleBackColor = false;
@@ -177,24 +176,10 @@ namespace serial_port_communication
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.Read_button);
             this.groupBox2.Controls.Add(this.ReceivedTextBox);
             resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
-            // 
-            // Read_button
-            // 
-            resources.ApplyResources(this.Read_button, "Read_button");
-            this.Read_button.Name = "Read_button";
-            this.Read_button.UseVisualStyleBackColor = true;
-            this.Read_button.Click += new System.EventHandler(this.Read_button_Click);
-            // 
-            // ReceivedTextBox
-            // 
-            resources.ApplyResources(this.ReceivedTextBox, "ReceivedTextBox");
-            this.ReceivedTextBox.Name = "ReceivedTextBox";
-            this.ReceivedTextBox.ReadOnly = true;
             // 
             // Clear_button
             // 
@@ -202,6 +187,12 @@ namespace serial_port_communication
             this.Clear_button.Name = "Clear_button";
             this.Clear_button.UseVisualStyleBackColor = true;
             this.Clear_button.Click += new System.EventHandler(this.Clear_button_Click);
+            // 
+            // ReceivedTextBox
+            // 
+            resources.ApplyResources(this.ReceivedTextBox, "ReceivedTextBox");
+            this.ReceivedTextBox.Name = "ReceivedTextBox";
+            this.ReceivedTextBox.ReadOnly = true;
             // 
             // Form1
             // 
@@ -251,10 +242,9 @@ namespace serial_port_communication
         private System.Windows.Forms.Button Send_button;
         private System.Windows.Forms.TextBox SendTextBox;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button Read_button;
-        private System.Windows.Forms.TextBox ReceivedTextBox;
         private System.Windows.Forms.Button Clear_button;
         private System.IO.Ports.SerialPort serialPort1;
+        private System.Windows.Forms.TextBox ReceivedTextBox;
     }
 }
 

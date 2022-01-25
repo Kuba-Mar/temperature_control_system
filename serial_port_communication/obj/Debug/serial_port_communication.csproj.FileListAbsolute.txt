@@ -8,3 +8,7 @@ C:\Users\Maks Pływaczyk\source\repos\serial_port_communication\serial_port_comm
 C:\Users\Maks Pływaczyk\source\repos\serial_port_communication\serial_port_communication\obj\Debug\serial_port_communication.csproj.CoreCompileInputs.cache
 C:\Users\Maks Pływaczyk\source\repos\serial_port_communication\serial_port_communication\obj\Debug\serial_port_communication.exe
 C:\Users\Maks Pływaczyk\source\repos\serial_port_communication\serial_port_communication\obj\Debug\serial_port_communication.pdb
+C:\Users\Maks Pływaczyk\source\repos\serial_port_communication\serial_port_communication\bin\Debug\serial_port_communication.exe.manifest
+C:\Users\Maks Pływaczyk\source\repos\serial_port_communication\serial_port_communication\bin\Debug\serial_port_communication.application
+C:\Users\Maks Pływaczyk\source\repos\serial_port_communication\serial_port_communication\obj\Debug\serial_port_communication.exe.manifest
+C:\Users\Maks Pływaczyk\source\repos\serial_port_communication\serial_port_communication\obj\Debug\serial_port_communication.application
