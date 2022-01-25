@@ -1,0 +1,10 @@
+C:\Users\Maks Pływaczyk\source\repos\serial_port_communication\serial_port_communication\bin\Debug\serial_port_communication.exe.config
+C:\Users\Maks Pływaczyk\source\repos\serial_port_communication\serial_port_communication\bin\Debug\serial_port_communication.exe
+C:\Users\Maks Pływaczyk\source\repos\serial_port_communication\serial_port_communication\bin\Debug\serial_port_communication.pdb
+C:\Users\Maks Pływaczyk\source\repos\serial_port_communication\serial_port_communication\obj\Debug\serial_port_communication.csproj.AssemblyReference.cache
+C:\Users\Maks Pływaczyk\source\repos\serial_port_communication\serial_port_communication\obj\Debug\serial_port_communication.Form1.resources
+C:\Users\Maks Pływaczyk\source\repos\serial_port_communication\serial_port_communication\obj\Debug\serial_port_communication.Properties.Resources.resources
+C:\Users\Maks Pływaczyk\source\repos\serial_port_communication\serial_port_communication\obj\Debug\serial_port_communication.csproj.GenerateResource.cache
+C:\Users\Maks Pływaczyk\source\repos\serial_port_communication\serial_port_communication\obj\Debug\serial_port_communication.csproj.CoreCompileInputs.cache
+C:\Users\Maks Pływaczyk\source\repos\serial_port_communication\serial_port_communication\obj\Debug\serial_port_communication.exe
+C:\Users\Maks Pływaczyk\source\repos\serial_port_communication\serial_port_communication\obj\Debug\serial_port_communication.pdb
