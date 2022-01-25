@@ -67,7 +67,7 @@ namespace serial_port_communication
             {
                 string value = SendTextBox.Text;
                 serialPort.Write(value);
-               
+                SendTextBox.Clear();
             }
             else
             {
