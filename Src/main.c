@@ -28,7 +28,7 @@
 /* USER CODE BEGIN Includes */
 #include "bmp280_defs.h"
 #include "bmp280.h"
-
+#include "regulator.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -76,7 +76,7 @@ void SystemClock_Config(void);
 
 // Sterowanie wypelnieniem grzalki
 char slowo[10];
-int pulse=0,pulse1=0;
+int pulse=0;
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart->Instance == USART3)
@@ -89,7 +89,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			//pulse = wartosc_wypelnienia(slowo);
 			HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_1);
 			__HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,pulse);
-			pulse1=pulse/10;
 			}
 		}
 		HAL_UART_Receive_IT(&huart3, (uint8_t *)slowo, 3);
@@ -110,9 +109,6 @@ int main(void)
 		struct bmp280_uncomp_data bmp280_1_data;
 		int32_t temp32, temp32_2;
 		double temp;
-		uint32_t pres32;
-		double pres;
-		int pressure;
 		char komunikat[100];
 		int temperatura;
 
@@ -192,15 +188,10 @@ int main(void)
 
 	  	  	  rslt = bmp280_get_comp_temp_double(&temp, bmp280_1_data.uncomp_temp, &bmp280_1);
 
-	  	  	  rslt = bmp280_get_comp_pres_32bit(&pres32, bmp280_1_data.uncomp_press, &bmp280_1);
-
-	  	  	  rslt = bmp280_get_comp_pres_double(&pres, bmp280_1_data.uncomp_press, &bmp280_1);
-
-	  	  	  pressure = (int)pres;
 
 	  	  	  temperatura = (int)temp;
 	  	  	  //Wyswietlanie temperatury w terminalu
-	  	  	  sprintf((char*)komunikat,"Temperatura:%d[C];\t\t   Cisnienie:%d[Pa] \r\n",temperatura,pressure);
+	  	  	  sprintf((char*)komunikat,"Temperatura:%d[C] \r\n",temperatura);
 	  	  	  HAL_UART_Transmit(&huart3,(uint8_t*)komunikat,strlen(komunikat),1000);
 	  	  	  bmp280_1.delay_ms(1000);
 
