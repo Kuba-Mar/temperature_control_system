@@ -74,7 +74,7 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 
 
-// Zadanie 5 i 6
+// Sterowanie wypelnieniem grzalki
 char slowo[10];
 int pulse=0,pulse1=0;
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
@@ -141,7 +141,7 @@ int main(void)
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 
-  // Zadanie 5 i 6
+
   HAL_UART_Receive_IT(&huart3, (uint8_t *)slowo, 3);
 
   // zawsze
@@ -196,14 +196,10 @@ int main(void)
 
 	  	  	  rslt = bmp280_get_comp_pres_double(&pres, bmp280_1_data.uncomp_press, &bmp280_1);
 
-	  	  	  //zadanie 2 i 3
-	  	  	//bmp280_1.delay_ms(1000);
-
-	  	  	  // Zadanie 3 4 5 6
 	  	  	  pressure = (int)pres;
 
-	  	  	  // Zadanie 4 5 6
 	  	  	  temperatura = (int)temp;
+	  	  	  //Wyswietlanie temperatury w terminalu
 	  	  	  sprintf((char*)komunikat,"Temperatura:%d[C];\t\t   Cisnienie:%d[Pa] \r\n",temperatura,pressure);
 	  	  	  HAL_UART_Transmit(&huart3,(uint8_t*)komunikat,strlen(komunikat),1000);
 	  	  	  bmp280_1.delay_ms(1000);
