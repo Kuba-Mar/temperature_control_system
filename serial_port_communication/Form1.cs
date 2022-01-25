@@ -63,8 +63,16 @@ namespace serial_port_communication
 
         private void Send_button_Click(object sender, EventArgs e)
         {
-            serialPort.WriteLine(SendTextBox.Text);
-            SendTextBox.Text = "";
+            if (serialPort.IsOpen)
+            {
+                string value = SendTextBox.Text;
+                serialPort.Write(value);
+               
+            }
+            else
+            {
+                MessageBox.Show("You have no connection to the device");
+            }
         }
         private void Refresh_button_Click(object sender, EventArgs e)
         {
