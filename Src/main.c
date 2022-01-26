@@ -217,7 +217,7 @@ int main(void)
 	  	  	  temperatura = (int)temp;
 	  	  	  //Wyswietlanie temperatury w terminalu
 	  	  	  sprintf((char*)komunikat,"%d \r\n",temperatura);
-	  	  	  HAL_UART_Transmit(&huart3,(uint8_t*)komunikat,strlen(komunikat),3000);
+	  	  	  HAL_UART_Transmit(&huart3,(uint8_t*)komunikat,strlen(komunikat),1000);
 	  	  	  bmp280_1.delay_ms(1000);
 
 
