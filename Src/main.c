@@ -75,24 +75,48 @@ void SystemClock_Config(void);
 
 
 // Sterowanie wypelnieniem grzalki
-char slowo[10];
-int pulse=0;
+//char slowo[10];
+//int pulse=0;    // początkowa wartość wypelnienia
+//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+//{
+//	if(huart->Instance == USART3)
+//	{
+//
+//			sscanf(slowo,"%d",&pulse);
+//			if(pulse >=0 && pulse <=100)
+//			{
+//			pulse*=10;
+//			//pulse = wartosc_wypelnienia(slowo);
+//			HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_1);
+//			__HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,pulse);
+//			}
+//		}
+//		HAL_UART_Receive_IT(&huart3, (uint8_t *)slowo, 3);
+//
+//}
+uint8_t polecenie[3];
+int pulse = 0;
+int funkcja(uint8_t po[])
+{
+	int j = 0, d = 0, wynik = 0;
+	if(po[0] == '0') {
+		d = (int)po[1];
+		j = (int)po[2];
+		wynik = (j - 48) * 10 + (d - 48) * 100;
+	}
+	if(po[0] == '1' && po[1] == '0' && po[2] == '0') {
+		wynik = 1000;
+	}
+	return wynik;
+}
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	if(huart->Instance == USART3)
-	{
-
-			sscanf(slowo,"%d",&pulse);
-			if(pulse >=0 && pulse <=100)
-			{
-			pulse*=10;
-			//pulse = wartosc_wypelnienia(slowo);
-			HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_1);
-			__HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,pulse);
-			}
-		}
-		HAL_UART_Receive_IT(&huart3, (uint8_t *)slowo, 3);
-
+	if(huart->Instance == USART3) {
+		pulse = funkcja(polecenie);
+		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pulse);
+	}
+	HAL_UART_Receive_IT(&huart3, &polecenie, 3);
 }
 
 /* USER CODE END 0 */
@@ -138,7 +162,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
 
-  HAL_UART_Receive_IT(&huart3, (uint8_t *)slowo, 3);
+    HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+    HAL_UART_Receive_IT(&huart3, &polecenie, 3);
 
   // zawsze
   int8_t rslt;
@@ -191,9 +216,10 @@ int main(void)
 
 	  	  	  temperatura = (int)temp;
 	  	  	  //Wyswietlanie temperatury w terminalu
-	  	  	  sprintf((char*)komunikat,"Temperatura:%d[C] \r\n",temperatura);
-	  	  	  HAL_UART_Transmit(&huart3,(uint8_t*)komunikat,strlen(komunikat),1000);
+	  	  	  sprintf((char*)komunikat,"%d \r\n",temperatura);
+	  	  	  HAL_UART_Transmit(&huart3,(uint8_t*)komunikat,strlen(komunikat),3000);
 	  	  	  bmp280_1.delay_ms(1000);
+
 
     /* USER CODE END WHILE */
 
