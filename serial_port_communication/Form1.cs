@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using System.IO.Ports;
 
@@ -53,7 +53,13 @@ namespace serial_port_communication
         {
             try
             {
-                ReceivedTextBox.Text = serialPort.ReadLine();
+             
+                while (true)
+                {
+                   ReceivedTextBox.Text = serialPort.ReadLine();
+                    Thread.Sleep(3000);
+      
+                }
             }
             catch (TimeoutException)
             {
