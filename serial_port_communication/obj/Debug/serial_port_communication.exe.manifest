@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="serial_port_communication.exe" size="40472">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="serial_port_communication.exe" size="40984">
       <assemblyIdentity name="serial_port_communication" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>K82OtUdkS+FlkkJIT/N+F3U1vujANK9TRVp9gClh+wU=</dsig:DigestValue>
+        <dsig:DigestValue>Xl0O9qV1Fca3fC0mtxkBdgkaV2E4beUiaDzYkDNN258=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

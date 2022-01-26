@@ -14,15 +14,44 @@ namespace serial_port_communication
     public partial class Form1 : Form
     {
         System.IO.Ports.SerialPort serialPort;
-        
-   
+        delegate void delegate1();
+        delegate1 mydelegate;
+
         public Form1()
         {
             InitializeComponent();
             serialPort = new SerialPort();
             serialPort.ReadTimeout = 500;
             serialPort.WriteTimeout = 500;
+            serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+            mydelegate = new delegate1(displayReceived);
 
+        }
+        private void displayReceived(/*object sender, SerialDataReceivedEventArgs e*/)
+        {
+            string message = "";
+            try
+            {
+                message = serialPort.ReadLine();
+            }
+            catch (Exception ex)
+            {
+                message = "Receiving message goes wrong";
+            }
+
+            if (checkBox1.Checked)
+            {
+                ReceivedTextBox.Text = message;
+            }
+            else
+            {
+                ReceivedTextBox.Text += message + Environment.NewLine;
+            }
+        }
+
+        void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
+        {
+            ReceivedTextBox.Invoke(mydelegate);
         }
 
 
@@ -49,23 +78,7 @@ namespace serial_port_communication
                     Connect_button.BackColor = Color.Red;
                 }
         }
-        private void Read_button_Click(object sender, EventArgs e)
-        {
-            try
-            {
-             
-                while (true)
-                {
-                   ReceivedTextBox.Text = serialPort.ReadLine();
-                    Thread.Sleep(3000);
-      
-                }
-            }
-            catch (TimeoutException)
-            {
-                ReceivedTextBox.Text = "Timeout Exception";
-            }
-        }
+       
 
         private void Send_button_Click(object sender, EventArgs e)
         {

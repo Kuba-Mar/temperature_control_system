@@ -47,7 +47,7 @@ namespace serial_port_communication
             this.Send_button = new System.Windows.Forms.Button();
             this.SendTextBox = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.Read_button = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.ReceivedTextBox = new System.Windows.Forms.TextBox();
             this.Clear_button = new System.Windows.Forms.Button();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
@@ -177,18 +177,17 @@ namespace serial_port_communication
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.Read_button);
+            this.groupBox2.Controls.Add(this.checkBox1);
             this.groupBox2.Controls.Add(this.ReceivedTextBox);
             resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
             // 
-            // Read_button
+            // checkBox1
             // 
-            resources.ApplyResources(this.Read_button, "Read_button");
-            this.Read_button.Name = "Read_button";
-            this.Read_button.UseVisualStyleBackColor = true;
-            this.Read_button.Click += new System.EventHandler(this.Read_button_Click);
+            resources.ApplyResources(this.checkBox1, "checkBox1");
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // ReceivedTextBox
             // 
@@ -251,10 +250,10 @@ namespace serial_port_communication
         private System.Windows.Forms.Button Send_button;
         private System.Windows.Forms.TextBox SendTextBox;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button Read_button;
         private System.Windows.Forms.TextBox ReceivedTextBox;
         private System.Windows.Forms.Button Clear_button;
         private System.IO.Ports.SerialPort serialPort1;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 
