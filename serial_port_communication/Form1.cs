@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using System.IO;
 using System.IO.Ports;
+using System.Diagnostics;
 
 namespace serial_port_communication
 {
@@ -16,6 +18,11 @@ namespace serial_port_communication
         System.IO.Ports.SerialPort serialPort;
         delegate void delegate1();
         delegate1 mydelegate;
+        TextWriter txt = new StreamWriter("data.txt");
+        Stopwatch stopwatch = new Stopwatch();
+        Stopwatch stopwatch2 = new Stopwatch();
+        bool flag;
+        int duty = 0;
 
         public Form1()
         {
@@ -25,8 +32,11 @@ namespace serial_port_communication
             serialPort.WriteTimeout = 500;
             serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
             mydelegate = new delegate1(displayReceived);
-
+            chart1.Series["Temperature"].BorderWidth = 3;
+            chart1.Series["Duty"].BorderWidth = 3;
+            
         }
+
         private void displayReceived(/*object sender, SerialDataReceivedEventArgs e*/)
         {
             string message = "";
@@ -39,14 +49,29 @@ namespace serial_port_communication
                 message = "Receiving message goes wrong";
             }
 
-            if (checkBox1.Checked)
+
+
+            if (checkBox1.Checked &&!checkBox3.Checked)
             {
                 ReceivedTextBox.Text = message;
+                stopwatch.Start();
+                var seconds = stopwatch.ElapsedMilliseconds / 1000;
+                chart1.Series["Temperature"].Points.AddXY(seconds, message);
+                chart1.Series["Duty"].Points.AddXY(seconds, duty);
+                if (flag != true)
+                {
+                    txt.Write(message);
+                }
+
             }
-            else
+         
+            if (checkBox3.Checked)
             {
-                ReceivedTextBox.Text += message + Environment.NewLine;
+                flag = true;
+                txt.Close();
+                stopwatch.Stop();
             }
+            
         }
 
         void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
@@ -57,9 +82,10 @@ namespace serial_port_communication
 
         private void Connect_button_Click(object sender, EventArgs e)
         {
-            Connect_button.BackColor = Color.Green;
+            
             if (serialPort.IsOpen)
             {
+                Connect_button.BackColor = Color.LightGreen;
                 MessageBox.Show("Already connected to the device");
             }
             else
@@ -78,27 +104,24 @@ namespace serial_port_communication
                     Connect_button.BackColor = Color.Red;
                 }
         }
-       
+
 
         private void Send_button_Click(object sender, EventArgs e)
         {
+            
             if (serialPort.IsOpen)
             {
                 string value = SendTextBox.Text;
                 serialPort.Write(value);
                 SendTextBox.Clear();
+                duty = int.Parse(value);
             }
             else
             {
                 MessageBox.Show("You have no connection to the device");
             }
+            
         }
-        private void Refresh_button_Click(object sender, EventArgs e)
-        {
-            Refresh_button.Text = Char.ConvertFromUtf32(81);
-            updateAvailablePorts();
-        }
-
         private void updateAvailablePorts()
         {
             COM_comboBox.Items.Clear();
@@ -110,10 +133,15 @@ namespace serial_port_communication
 
         private void Clear_button_Click(object sender, EventArgs e)
         {
+            chart1.Series["Temperature"].Points.Clear();
+            chart1.Series["Duty"].Points.Clear();
             SendTextBox.Clear();
             ReceivedTextBox.Clear();
         }
 
-      
+        private void Refresh_button_Click_1(object sender, EventArgs e)
+        {
+            updateAvailablePorts();
+        }
     }
 }

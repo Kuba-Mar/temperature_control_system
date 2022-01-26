@@ -31,7 +31,10 @@ namespace serial_port_communication
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.Refresh_button = new System.Windows.Forms.Button();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.COM_comboBox = new System.Windows.Forms.ComboBox();
             this.Baud_Rate_comboBox = new System.Windows.Forms.ComboBox();
             this.Data_Bits_comboBox = new System.Windows.Forms.ComboBox();
@@ -47,20 +50,20 @@ namespace serial_port_communication
             this.Send_button = new System.Windows.Forms.Button();
             this.SendTextBox = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.ReceivedTextBox = new System.Windows.Forms.TextBox();
             this.Clear_button = new System.Windows.Forms.Button();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.Temperature = new System.Windows.Forms.GroupBox();
+            this.Refresh_button = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            this.Temperature.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // Refresh_button
-            // 
-            resources.ApplyResources(this.Refresh_button, "Refresh_button");
-            this.Refresh_button.Name = "Refresh_button";
-            this.Refresh_button.UseVisualStyleBackColor = true;
-            this.Refresh_button.Click += new System.EventHandler(this.Refresh_button_Click);
             // 
             // COM_comboBox
             // 
@@ -177,17 +180,33 @@ namespace serial_port_communication
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.checkBox3);
             this.groupBox2.Controls.Add(this.checkBox1);
+            this.groupBox2.Controls.Add(this.textBox1);
             this.groupBox2.Controls.Add(this.ReceivedTextBox);
             resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
+            // 
+            // checkBox3
+            // 
+            resources.ApplyResources(this.checkBox3, "checkBox3");
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.UseVisualStyleBackColor = true;
             // 
             // checkBox1
             // 
             resources.ApplyResources(this.checkBox1, "checkBox1");
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // textBox1
+            // 
+            this.textBox1.BackColor = System.Drawing.SystemColors.Control;
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            resources.ApplyResources(this.textBox1, "textBox1");
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
             // 
             // ReceivedTextBox
             // 
@@ -202,14 +221,56 @@ namespace serial_port_communication
             this.Clear_button.UseVisualStyleBackColor = true;
             this.Clear_button.Click += new System.EventHandler(this.Clear_button_Click);
             // 
+            // chart1
+            // 
+            this.chart1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.chart1.BorderlineColor = System.Drawing.Color.DarkGray;
+            this.chart1.BorderlineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Solid;
+            chartArea3.AxisX.Title = "Time [s]";
+            chartArea3.AxisY.Title = "Temp [°C]";
+            chartArea3.AxisY2.Title = "Duty [%]";
+            chartArea3.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea3);
+            legend3.BorderColor = System.Drawing.Color.Gray;
+            legend3.Name = "Legend1";
+            this.chart1.Legends.Add(legend3);
+            resources.ApplyResources(this.chart1, "chart1");
+            this.chart1.Name = "chart1";
+            series5.ChartArea = "ChartArea1";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series5.Legend = "Legend1";
+            series5.Name = "Temperature";
+            series5.XValueMember = "message";
+            series6.ChartArea = "ChartArea1";
+            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine;
+            series6.Legend = "Legend1";
+            series6.Name = "Duty";
+            series6.YAxisType = System.Windows.Forms.DataVisualization.Charting.AxisType.Secondary;
+            this.chart1.Series.Add(series5);
+            this.chart1.Series.Add(series6);
+            // 
+            // Temperature
+            // 
+            this.Temperature.Controls.Add(this.chart1);
+            resources.ApplyResources(this.Temperature, "Temperature");
+            this.Temperature.Name = "Temperature";
+            this.Temperature.TabStop = false;
+            // 
+            // Refresh_button
+            // 
+            resources.ApplyResources(this.Refresh_button, "Refresh_button");
+            this.Refresh_button.Name = "Refresh_button";
+            this.Refresh_button.UseVisualStyleBackColor = true;
+            this.Refresh_button.Click += new System.EventHandler(this.Refresh_button_Click_1);
+            // 
             // Form1
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.Refresh_button);
             this.Controls.Add(this.Clear_button);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.Connect_button);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -221,20 +282,21 @@ namespace serial_port_communication
             this.Controls.Add(this.Data_Bits_comboBox);
             this.Controls.Add(this.Baud_Rate_comboBox);
             this.Controls.Add(this.COM_comboBox);
-            this.Controls.Add(this.Refresh_button);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.Temperature);
             this.Name = "Form1";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            this.Temperature.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button Refresh_button;
         private System.Windows.Forms.ComboBox COM_comboBox;
         private System.Windows.Forms.ComboBox Baud_Rate_comboBox;
         private System.Windows.Forms.ComboBox Data_Bits_comboBox;
@@ -253,7 +315,12 @@ namespace serial_port_communication
         private System.Windows.Forms.TextBox ReceivedTextBox;
         private System.Windows.Forms.Button Clear_button;
         private System.IO.Ports.SerialPort serialPort1;
+        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.GroupBox Temperature;
+        private System.Windows.Forms.Button Refresh_button;
     }
 }
 
