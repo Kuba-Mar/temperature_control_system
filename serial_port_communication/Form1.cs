@@ -70,10 +70,7 @@ namespace serial_port_communication
                 flag = true;
                 txt.Close();
                 stopwatch.Stop();
-                string pathImage = Environment.CurrentDirectory + "\\temperatureChart.png";
-                chart1.SaveImage(pathImage, System.Windows.Forms.DataVisualization.Charting.ChartImageFormat.Png);
-
-                MessageBox.Show("Chart saved to the files");
+               
             }
 
         }
@@ -163,6 +160,13 @@ namespace serial_port_communication
         {
             string value = "fon";
             serialPort.Write(value);
+        }
+
+        private void saveChart_Click(object sender, EventArgs e)
+        {
+            string pathImage = Environment.CurrentDirectory + "\\temperatureChart.png";
+            chart1.SaveImage(pathImage, System.Windows.Forms.DataVisualization.Charting.ChartImageFormat.Png);
+            MessageBox.Show("Chart saved to the files");
         }
     }
 }
