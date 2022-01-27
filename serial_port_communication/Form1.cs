@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 using System.IO;
 using System.IO.Ports;
@@ -23,7 +17,9 @@ namespace serial_port_communication
         Stopwatch stopwatch2 = new Stopwatch();
         bool flag;
         int duty = 0;
-
+        int temp_duty = 0;
+        int temp_min;
+        string value;
         public Form1()
         {
             InitializeComponent();
@@ -33,8 +29,8 @@ namespace serial_port_communication
             serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
             mydelegate = new delegate1(displayReceived);
             chart1.Series["Temperature"].BorderWidth = 3;
-            chart1.Series["Duty"].BorderWidth = 3;
-            
+            chart1.Series["Set temperature"].BorderWidth = 3;
+
         }
 
         private void displayReceived(/*object sender, SerialDataReceivedEventArgs e*/)
@@ -51,27 +47,31 @@ namespace serial_port_communication
 
 
 
-            if (checkBox1.Checked &&!checkBox3.Checked)
+            if (checkBox1.Checked && !checkBox3.Checked)
             {
                 ReceivedTextBox.Text = message;
                 stopwatch.Start();
                 var seconds = stopwatch.ElapsedMilliseconds / 1000;
+                if (seconds<5 && seconds>1)
+                {
+                    temp_min = int.Parse(message);
+                }
                 chart1.Series["Temperature"].Points.AddXY(seconds, message);
-                chart1.Series["Duty"].Points.AddXY(seconds, duty);
+                chart1.Series["Set temperature"].Points.AddXY(seconds, duty);
                 if (flag != true)
                 {
                     txt.Write(message);
                 }
 
             }
-         
+
             if (checkBox3.Checked)
             {
                 flag = true;
                 txt.Close();
                 stopwatch.Stop();
             }
-            
+
         }
 
         void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
@@ -82,10 +82,10 @@ namespace serial_port_communication
 
         private void Connect_button_Click(object sender, EventArgs e)
         {
-            
+            Connect_button.BackColor = Color.LightGreen;
             if (serialPort.IsOpen)
             {
-                Connect_button.BackColor = Color.LightGreen;
+                
                 MessageBox.Show("Already connected to the device");
             }
             else
@@ -108,19 +108,30 @@ namespace serial_port_communication
 
         private void Send_button_Click(object sender, EventArgs e)
         {
-            
+
             if (serialPort.IsOpen)
             {
-                string value = SendTextBox.Text;
-                serialPort.Write(value);
-                SendTextBox.Clear();
-                duty = int.Parse(value);
+                value = SendTextBox.Text;
+                if (int.Parse(value) >= temp_min && int.Parse(value) <= 40)
+                {
+                    duty = int.Parse(value);
+                    serialPort.Write(value);
+                    SendTextBox.Clear();
+                    SetTemp.Text = value;
+
+                }
+                else {
+
+                    duty = 0;
+                    MessageBox.Show("Choose a temperature value between " + temp_min + "°C and 40°C");
+                }
+                    
             }
             else
             {
                 MessageBox.Show("You have no connection to the device");
             }
-            
+
         }
         private void updateAvailablePorts()
         {
@@ -139,9 +150,15 @@ namespace serial_port_communication
             ReceivedTextBox.Clear();
         }
 
-        private void Refresh_button_Click_1(object sender, EventArgs e)
+        private void Refresh_button_Click(object sender, EventArgs e)
         {
             updateAvailablePorts();
+        }
+
+        private void Reset_Click(object sender, EventArgs e)
+        {
+            string value = "fon";
+            serialPort.Write(value);
         }
     }
 }
