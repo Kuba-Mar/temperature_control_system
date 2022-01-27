@@ -17,7 +17,6 @@ namespace serial_port_communication
         Stopwatch stopwatch2 = new Stopwatch();
         bool flag;
         int duty = 0;
-        int temp_duty = 0;
         int temp_min;
         string value;
         public Form1()
@@ -61,6 +60,7 @@ namespace serial_port_communication
                 if (flag != true)
                 {
                     txt.Write(message);
+                    txt.Write(seconds);
                 }
 
             }
