@@ -72,7 +72,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-int temperatura;
+float temperatura;
 char polecenie[2];
 int set_point = 0;
 uint16_t pwm_duty;
@@ -184,18 +184,17 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  rslt = bmp280_get_uncomp_data(&bmp280_1_data, &bmp280_1);
+	  	  	  rslt = bmp280_get_uncomp_data(&bmp280_1_data, &bmp280_1);
 
 	  	  	  rslt = bmp280_get_comp_temp_32bit(&temp32, bmp280_1_data.uncomp_temp, &bmp280_1);
 
 	  	  	  rslt = bmp280_get_comp_temp_double(&temp, bmp280_1_data.uncomp_temp, &bmp280_1);
 
 
-	  	  	  temperatura = (int)temp;
-	  	  	  //Wyswietlanie temperatury w terminalu
-	  	  	  sprintf((char*)komunikat,"%d \r\n",temperatura);
-	  	  	  HAL_UART_Transmit(&huart3,(uint8_t*)komunikat,strlen(komunikat),1000);
-	  	  	  bmp280_1.delay_ms(1000);
+	  	  	  	  	  	  //Wyswietlanie temperatury w terminalu
+	  	  		  	  	  sprintf((char*)komunikat,"%0.2f \r\n",temp);
+	  	  		  	  	  HAL_UART_Transmit(&huart3,(uint8_t*)komunikat,strlen(komunikat),1000);
+	  	  		  	  	  bmp280_1.delay_ms(1000);
 
 
     /* USER CODE END WHILE */
