@@ -72,53 +72,34 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-
-// Sterowanie wypelnieniem grzalki
-//char slowo[10];
-//int pulse=0;    // początkowa wartość wypelnienia
-//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-//{
-//	if(huart->Instance == USART3)
-//	{
-//
-//			sscanf(slowo,"%d",&pulse);
-//			if(pulse >=0 && pulse <=100)
-//			{
-//			pulse*=10;
-//			//pulse = wartosc_wypelnienia(slowo);
-//			HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_1);
-//			__HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,pulse);
-//			}
-//		}
-//		HAL_UART_Receive_IT(&huart3, (uint8_t *)slowo, 3);
-//
-//}
-uint8_t polecenie[3];
-int pulse = 0;
-int funkcja(uint8_t po[])
+float temperatura;
+char polecenie[2];
+int set_point = 0;
+uint16_t pwm_duty;
+two_position_t tp1 = {.H = 0.5, .u_min = 0, .u_max = 999, .u_value = 0};
+int funkcja(char po[])
 {
-	int j = 0, d = 0, wynik = 0;
-	if(po[0] == '0') {
-		d = (int)po[1];
-		j = (int)po[2];
-		wynik = (j - 48) * 10 + (d - 48) * 100;
-	}
-	if(po[0] == '1' && po[1] == '0' && po[2] == '0') {
-		wynik = 1000;
-	}
+	int wynik = atoi(po);
 	return wynik;
 }
-
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart->Instance == USART3) {
-		pulse = funkcja(polecenie);
-		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pulse);
+		set_point = funkcja(polecenie);
 	}
-	HAL_UART_Receive_IT(&huart3, &polecenie, 3);
+	HAL_UART_Receive_IT(&huart3, &polecenie, 2);
 }
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	if(htim->Instance == TIM6) {
+		HAL_GPIO_TogglePin(LD3_GPIO_Port, LD1_Pin);
 
+		float feedback_measurement = temperatura;
+
+		pwm_duty = (uint16_t)calculate_two_position_controller(&tp1, set_point, feedback_measurement);
+		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pwm_duty);
+	}
+}
 /* USER CODE END 0 */
 
 /**
@@ -134,7 +115,7 @@ int main(void)
 		int32_t temp32, temp32_2;
 		double temp;
 		char komunikat[100];
-		int temperatura;
+
 
   /* USER CODE END 1 */
 
@@ -159,11 +140,12 @@ int main(void)
   MX_USART3_UART_Init();
   MX_SPI4_Init();
   MX_TIM3_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
 
-
+    HAL_TIM_Base_Start_IT(&htim6);
     HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
-    HAL_UART_Receive_IT(&huart3, &polecenie, 3);
+    HAL_UART_Receive_IT(&huart3, &polecenie, 2);
 
   // zawsze
   int8_t rslt;
@@ -187,12 +169,7 @@ int main(void)
 
       /* Setting the output data rate as 1 Hz (1000ms) */
 
-      // Zadanie 2 i 4 5 6
       conf.odr = BMP280_ODR_1000_MS;
-
-      // Zadanie 3 Setting the output data rate as 4 Hz (250ms)
-      //conf.odr = BMP280_ODR_250_MS;
-
 
       // zawsze
       rslt = bmp280_set_config(&conf, &bmp280_1);
@@ -207,18 +184,17 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  rslt = bmp280_get_uncomp_data(&bmp280_1_data, &bmp280_1);
+	  	  	  rslt = bmp280_get_uncomp_data(&bmp280_1_data, &bmp280_1);
 
 	  	  	  rslt = bmp280_get_comp_temp_32bit(&temp32, bmp280_1_data.uncomp_temp, &bmp280_1);
 
 	  	  	  rslt = bmp280_get_comp_temp_double(&temp, bmp280_1_data.uncomp_temp, &bmp280_1);
 
 
-	  	  	  temperatura = (int)temp;
-	  	  	  //Wyswietlanie temperatury w terminalu
-	  	  	  sprintf((char*)komunikat,"%d \r\n",temperatura);
-	  	  	  HAL_UART_Transmit(&huart3,(uint8_t*)komunikat,strlen(komunikat),1000);
-	  	  	  bmp280_1.delay_ms(1000);
+	  	  	  	  	  	  //Wyswietlanie temperatury w terminalu
+	  	  		  	  	  sprintf((char*)komunikat,"%0.2f \r\n",temp);
+	  	  		  	  	  HAL_UART_Transmit(&huart3,(uint8_t*)komunikat,strlen(komunikat),1000);
+	  	  		  	  	  bmp280_1.delay_ms(1000);
 
 
     /* USER CODE END WHILE */
