@@ -52,8 +52,7 @@
 
 /* USER CODE BEGIN PV */
 int8_t bmp280_spi_reg_write ( uint8_t cs , uint8_t reg_addr , uint8_t * reg_data , uint16_t length );
-
- int8_t bmp280_spi_reg_read ( uint8_t cs , uint8_t reg_addr , uint8_t * reg_data , uint16_t length );
+int8_t bmp280_spi_reg_read ( uint8_t cs , uint8_t reg_addr , uint8_t * reg_data , uint16_t length );
 
 struct bmp280_dev bmp280_1={
 	.dev_id = BMP280_CS1,
@@ -110,11 +109,10 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	//Zadanie zawsze
-		struct bmp280_uncomp_data bmp280_1_data;
-		int32_t temp32, temp32_2;
-		double temp;
-		char komunikat[100];
+	struct bmp280_uncomp_data bmp280_1_data;
+	int32_t temp32, temp32_2;
+	double temp;
+	char komunikat[100];
 
 
   /* USER CODE END 1 */
@@ -142,41 +140,36 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
+  HAL_TIM_Base_Start_IT(&htim6);
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+  HAL_UART_Receive_IT(&huart3, &polecenie, 2);
 
-    HAL_TIM_Base_Start_IT(&htim6);
-    HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
-    HAL_UART_Receive_IT(&huart3, &polecenie, 2);
 
-  // zawsze
   int8_t rslt;
-      struct bmp280_config conf;
+  struct bmp280_config conf;
+  rslt = bmp280_init(&bmp280_1);
 
-      rslt = bmp280_init(&bmp280_1);
+  /*Always read the current settings before writing especially when all the configuration is not modified */
+  rslt = bmp280_get_config(&conf, &bmp280_1);
 
-      /*Always read the current settings before writing especially when all the configuration is not modified */
-      rslt = bmp280_get_config(&conf, &bmp280_1);
+  /* congiguring the temperature oversampling, filter coefficient and output data rate */
+  /* Overwrite the desired settings */
+  conf.filter = BMP280_FILTER_OFF;
 
-      /* congiguring the temperature oversampling, filter coefficient and output data rate */
-      /* Overwrite the desired settings */
+  /* Temperature oversampling set at 1x */
+  conf.os_temp = BMP280_OS_1X;
 
-      conf.filter = BMP280_FILTER_OFF;
+  /* Pressure oversampling set at 1x */
+  conf.os_pres = BMP280_OS_1X;
 
-      /* Temperature oversampling set at 1x */
-      conf.os_temp = BMP280_OS_1X;
+  /* Setting the output data rate as 1 Hz (1000ms) */
 
-      /* Pressure oversampling set at 1x */
-      conf.os_pres = BMP280_OS_1X;
+  conf.odr = BMP280_ODR_1000_MS;
 
-      /* Setting the output data rate as 1 Hz (1000ms) */
+  rslt = bmp280_set_config(&conf, &bmp280_1);
 
-      conf.odr = BMP280_ODR_1000_MS;
-
-      // zawsze
-      rslt = bmp280_set_config(&conf, &bmp280_1);
-
-      /* Always set the power mode after setting the configuration */
-      //do wszystkich
-      rslt = bmp280_set_power_mode(BMP280_NORMAL_MODE, &bmp280_1);
+  /* Always set the power mode after setting the configuration */
+  rslt = bmp280_set_power_mode(BMP280_NORMAL_MODE, &bmp280_1);
 
   /* USER CODE END 2 */
 
@@ -184,18 +177,17 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  	  	  rslt = bmp280_get_uncomp_data(&bmp280_1_data, &bmp280_1);
+	  rslt = bmp280_get_uncomp_data(&bmp280_1_data, &bmp280_1);
 
-	  	  	  rslt = bmp280_get_comp_temp_32bit(&temp32, bmp280_1_data.uncomp_temp, &bmp280_1);
+	  rslt = bmp280_get_comp_temp_32bit(&temp32, bmp280_1_data.uncomp_temp, &bmp280_1);
 
-	  	  	  rslt = bmp280_get_comp_temp_double(&temp, bmp280_1_data.uncomp_temp, &bmp280_1);
+	  rslt = bmp280_get_comp_temp_double(&temp, bmp280_1_data.uncomp_temp, &bmp280_1);
 
 
-	  	  	  	  	  	  //Wyswietlanie temperatury w terminalu
-	  	  		  	  	  sprintf((char*)komunikat,"%0.2f \r\n",temp);
-	  	  		  	  	  HAL_UART_Transmit(&huart3,(uint8_t*)komunikat,strlen(komunikat),1000);
-	  	  		  	  	  bmp280_1.delay_ms(1000);
-
+	  //Wyswietlanie temperatury w terminalu
+	  sprintf((char*)komunikat,"%0.2f \r\n",temp);
+	  HAL_UART_Transmit(&huart3,(uint8_t*)komunikat,strlen(komunikat),1000);
+	  bmp280_1.delay_ms(1000);
 
     /* USER CODE END WHILE */
 
