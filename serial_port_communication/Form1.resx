@@ -744,7 +744,7 @@
     <value>True</value>
   </data>
   <data name="ReceivedTextBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>156, 42</value>
+    <value>150, 40</value>
   </data>
   <data name="ReceivedTextBox.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
