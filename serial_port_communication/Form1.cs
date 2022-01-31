@@ -68,6 +68,7 @@ namespace serial_port_communication
                 flag = true;
                 txt.Close();
                 stopwatch.Stop();
+
             }
         }
 
