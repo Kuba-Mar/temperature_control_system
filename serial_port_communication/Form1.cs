@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.IO.Ports;
 using System.Diagnostics;
-
+using System.Globalization;
 namespace serial_port_communication
 {
     public partial class Form1 : Form
@@ -46,12 +46,14 @@ namespace serial_port_communication
 
             if (checkBox1.Checked && !checkBox3.Checked)
             {
+                CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+                ci.NumberFormat.CurrencyDecimalSeparator = ".";
                 ReceivedTextBox.Text = message;
                 stopwatch.Start();
                 var seconds = stopwatch.ElapsedMilliseconds / 1000;
                 if (seconds<5 && seconds>1)
                 {
-                    temp_min = float.Parse(message);
+                    temp_min = float.Parse(message, NumberStyles.Any, ci);
                 }
                 chart1.Series["Temperature"].Points.AddXY(seconds, message);
                 chart1.Series["Set temperature"].Points.AddXY(seconds, duty);
@@ -59,6 +61,7 @@ namespace serial_port_communication
                 {
                     txt.Write(message);
                     txt.Write(seconds);
+
                 }
 
             }
@@ -68,7 +71,6 @@ namespace serial_port_communication
                 flag = true;
                 txt.Close();
                 stopwatch.Stop();
-
             }
         }
 
