@@ -14,10 +14,9 @@ namespace serial_port_communication
         delegate1 mydelegate;
         TextWriter txt = new StreamWriter("data.txt");
         Stopwatch stopwatch = new Stopwatch();
-        Stopwatch stopwatch2 = new Stopwatch();
         bool flag;
         int duty = 0;
-        int temp_min;
+        float temp_min;
         string value;
         public Form1()
         {
@@ -29,7 +28,6 @@ namespace serial_port_communication
             mydelegate = new delegate1(displayReceived);
             chart1.Series["Temperature"].BorderWidth = 3;
             chart1.Series["Set temperature"].BorderWidth = 3;
-
         }
 
         private void displayReceived(/*object sender, SerialDataReceivedEventArgs e*/)
@@ -53,7 +51,7 @@ namespace serial_port_communication
                 var seconds = stopwatch.ElapsedMilliseconds / 1000;
                 if (seconds<5 && seconds>1)
                 {
-                    temp_min = int.Parse(message);
+                    temp_min = float.Parse(message);
                 }
                 chart1.Series["Temperature"].Points.AddXY(seconds, message);
                 chart1.Series["Set temperature"].Points.AddXY(seconds, duty);
@@ -70,13 +68,7 @@ namespace serial_port_communication
                 flag = true;
                 txt.Close();
                 stopwatch.Stop();
-<<<<<<< HEAD
-               
-=======
-              
->>>>>>> origin/main
             }
-
         }
 
         void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
@@ -117,7 +109,7 @@ namespace serial_port_communication
             if (serialPort.IsOpen)
             {
                 value = SendTextBox.Text;
-                if (int.Parse(value) >= temp_min && int.Parse(value) <= 40)
+                if (float.Parse(value) >= temp_min && float.Parse(value) <= 40)
                 {
                     duty = int.Parse(value);
                     serialPort.Write(value);
@@ -165,12 +157,7 @@ namespace serial_port_communication
             string value = "fon";
             serialPort.Write(value);
         }
-
-<<<<<<< HEAD
-        private void saveChart_Click(object sender, EventArgs e)
-=======
         private void SendChartbutton_Click(object sender, EventArgs e)
->>>>>>> origin/main
         {
             string pathImage = Environment.CurrentDirectory + "\\temperatureChart.png";
             chart1.SaveImage(pathImage, System.Windows.Forms.DataVisualization.Charting.ChartImageFormat.Png);

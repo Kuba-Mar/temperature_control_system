@@ -62,11 +62,7 @@ namespace serial_port_communication
             this.Temperature = new System.Windows.Forms.GroupBox();
             this.Refresh_button = new System.Windows.Forms.Button();
             this.Reset = new System.Windows.Forms.Button();
-<<<<<<< HEAD
-            this.saveChart = new System.Windows.Forms.Button();
-=======
             this.SendChartbutton = new System.Windows.Forms.Button();
->>>>>>> origin/main
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -294,32 +290,19 @@ namespace serial_port_communication
             this.Reset.UseVisualStyleBackColor = true;
             this.Reset.Click += new System.EventHandler(this.Reset_Click);
             // 
-<<<<<<< HEAD
-            // saveChart
-            // 
-            resources.ApplyResources(this.saveChart, "saveChart");
-            this.saveChart.Name = "saveChart";
-            this.saveChart.UseVisualStyleBackColor = true;
-            this.saveChart.Click += new System.EventHandler(this.saveChart_Click);
-=======
             // SendChartbutton
             // 
             resources.ApplyResources(this.SendChartbutton, "SendChartbutton");
             this.SendChartbutton.Name = "SendChartbutton";
             this.SendChartbutton.UseVisualStyleBackColor = true;
             this.SendChartbutton.Click += new System.EventHandler(this.SendChartbutton_Click);
->>>>>>> origin/main
             // 
             // Form1
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-<<<<<<< HEAD
-            this.Controls.Add(this.saveChart);
-=======
             this.Controls.Add(this.SendChartbutton);
->>>>>>> origin/main
             this.Controls.Add(this.Reset);
             this.Controls.Add(this.Clear_button);
             this.Controls.Add(this.groupBox2);
@@ -377,11 +360,8 @@ namespace serial_port_communication
         private System.Windows.Forms.Button Reset;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox SetTemp;
-<<<<<<< HEAD
-        private System.Windows.Forms.Button saveChart;
-=======
         private System.Windows.Forms.Button SendChartbutton;
->>>>>>> origin/main
+
     }
 }
 
