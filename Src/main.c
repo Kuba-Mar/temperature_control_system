@@ -45,59 +45,95 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-int8_t bmp280_spi_reg_write ( uint8_t cs , uint8_t reg_addr , uint8_t * reg_data , uint16_t length );
-int8_t bmp280_spi_reg_read ( uint8_t cs , uint8_t reg_addr , uint8_t * reg_data , uint16_t length );
+int8_t bmp280_spi_reg_write(uint8_t cs, uint8_t reg_addr, uint8_t*reg_data, uint16_t length);
+int8_t bmp280_spi_reg_read(uint8_t cs, uint8_t reg_addr, uint8_t*reg_data, uint16_t length);
 
-struct bmp280_dev bmp280_1={
-	.dev_id = BMP280_CS1,
-	.intf = BMP280_SPI_INTF,
-	.read = bmp280_spi_reg_read,
-	.write = bmp280_spi_reg_write,
-	.delay_ms = HAL_Delay
+/* Temperature sensor structure */
+struct bmp280_dev bmp280_1 = {
+  .dev_id = BMP280_CS1,
+  .intf = BMP280_SPI_INTF,
+  .read = bmp280_spi_reg_read,
+  .write = bmp280_spi_reg_write,
+  .delay_ms = HAL_Delay
 };
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-float temperatura;
-char polecenie[2];
+
+/* Value read from UART */
+char reference_value[2];
+
+/* Variable storing a temperature value */
+double temp;
+
+/* Set point value */
 int set_point = 0;
+
+/* Duty of PWM to control the actuator */
 uint16_t pwm_duty;
-two_position_t tp1 = {.H = 0.5, .u_min = 0, .u_max = 999, .u_value = 0};
-int funkcja(char po[])
+
+/* Declaration of two position controller */
+two_position_t tp = {.H = 0.5, .u_min = 0, .u_max = 999, .u_value = 0};
+
+/*!
+* @brief  Function for converting string from external app to integer value.
+* @param [in] str : String to convert.
+* @return converted string.
+*/
+int convert(char str[])
 {
-	int wynik = atoi(po);
-	return wynik;
+  /* Converting string into integer value */
+  int output = atoi(str);
+
+  /* Returning the converted value */
+  return output;
 }
+
+/**
+  * @brief  Period elapsed callback in non-blocking mode.
+  * Assigning converted data to set point value.
+  * @param  htim TIM handle
+  * @retval None
+  */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	if(huart->Instance == USART3) {
-		set_point = funkcja(polecenie);
-	}
-	HAL_UART_Receive_IT(&huart3, &polecenie, 2);
+  if(huart->Instance == USART3) {
+	/* Set point value assignment from UART */
+    set_point = convert(reference_value);
+  }
+  HAL_UART_Receive_IT(&huart3, &reference_value, 2);
 }
+
+
+/**
+  * @brief  Period elapsed callback in non-blocking mode with implemented control algorithm
+  * @param  htim TIM handle
+  * @retval None
+  */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	if(htim->Instance == TIM6) {
-		HAL_GPIO_TogglePin(LD3_GPIO_Port, LD1_Pin);
+  if(htim->Instance == TIM6) {
+	/* Toggle LED1 */
+    HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
 
-		float feedback_measurement = temperatura;
+    /* Reading current temperature  */
+    float feedback_measurement = temp;
 
-		pwm_duty = (uint16_t)calculate_two_position_controller(&tp1, set_point, feedback_measurement);
-		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pwm_duty);
-	}
+    /* Control algorithm */
+    pwm_duty = (uint16_t)calculate_two_position_controller(&tp, set_point, feedback_measurement);
+    __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, pwm_duty);
+  }
 }
 /* USER CODE END 0 */
 
@@ -109,11 +145,11 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	struct bmp280_uncomp_data bmp280_1_data;
-	int32_t temp32, temp32_2;
-	double temp;
-	char komunikat[100];
+  /* Uncompensated data structure storing sensor's reading values  */
+  struct bmp280_uncomp_data bmp280_1_data;
 
+  /* Message read from UART */
+  char msg[100];
 
   /* USER CODE END 1 */
 
@@ -140,11 +176,16 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
+   /* Starting the TIM6 Base generation */
   HAL_TIM_Base_Start_IT(&htim6);
+
+  /* Starting the PWM signal generation. */
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
-  HAL_UART_Receive_IT(&huart3, &polecenie, 2);
 
+  /* Receiving set point value from UART in interrupt mode. */
+  HAL_UART_Receive_IT(&huart3, &reference_value, 2);
 
+  /* Variables needed to configure and read data from sensor */
   int8_t rslt;
   struct bmp280_config conf;
   rslt = bmp280_init(&bmp280_1);
@@ -152,25 +193,20 @@ int main(void)
   /*Always read the current settings before writing especially when all the configuration is not modified */
   rslt = bmp280_get_config(&conf, &bmp280_1);
 
-  /* congiguring the temperature oversampling, filter coefficient and output data rate */
+  /* configuring the temperature oversampling, filter coefficient and output data rate */
   /* Overwrite the desired settings */
   conf.filter = BMP280_FILTER_OFF;
 
   /* Temperature oversampling set at 1x */
   conf.os_temp = BMP280_OS_1X;
 
-  /* Pressure oversampling set at 1x */
-  conf.os_pres = BMP280_OS_1X;
-
   /* Setting the output data rate as 1 Hz (1000ms) */
-
   conf.odr = BMP280_ODR_1000_MS;
 
   rslt = bmp280_set_config(&conf, &bmp280_1);
 
   /* Always set the power mode after setting the configuration */
   rslt = bmp280_set_power_mode(BMP280_NORMAL_MODE, &bmp280_1);
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -178,20 +214,16 @@ int main(void)
   while (1)
   {
 	  rslt = bmp280_get_uncomp_data(&bmp280_1_data, &bmp280_1);
-
-	  rslt = bmp280_get_comp_temp_32bit(&temp32, bmp280_1_data.uncomp_temp, &bmp280_1);
-
 	  rslt = bmp280_get_comp_temp_double(&temp, bmp280_1_data.uncomp_temp, &bmp280_1);
 
+	/* Displaying temperature in terminal */
+	sprintf((char*)msg, "%0.2f \r\n", temp);
+	HAL_UART_Transmit(&huart3,(uint8_t*)msg, strlen(msg), 1000);
+	bmp280_1.delay_ms(1000);
 
-	  //Wyswietlanie temperatury w terminalu
-	  sprintf((char*)komunikat,"%0.2f \r\n",temp);
-	  HAL_UART_Transmit(&huart3,(uint8_t*)komunikat,strlen(komunikat),1000);
-	  bmp280_1.delay_ms(1000);
+  /* USER CODE END WHILE */
 
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
+  /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
@@ -262,100 +294,95 @@ void SystemClock_Config(void)
 *
 * @return Status of execution
 * @retval 0 -> Success
- * @retval >0 -> Failure Info
- *
- */
- int8_t bmp280_spi_reg_read ( uint8_t cs , uint8_t reg_addr , uint8_t * reg_data , uint16_t
-length )
- {
- /* Implement the SPI read routine according to the target machine . */
- HAL_StatusTypeDef status = HAL_OK ;
- int32_t iError = BMP280_OK ;
- uint8_t txarray [ BMP280_SPI_BUFFER_LEN ] = {0 ,};
- uint8_t rxarray [ BMP280_SPI_BUFFER_LEN ] = {0 ,};
- uint8_t stringpos ;
+* @retval >0 -> Failure Info
+*
+*/
+int8_t bmp280_spi_reg_read(uint8_t cs, uint8_t reg_addr, uint8_t * reg_data, uint16_t length)
+{
+  /* Implement the SPI read routine according to the target machine . */
+  HAL_StatusTypeDef status = HAL_OK;
+  int32_t iError = BMP280_OK;
+  uint8_t txarray [ BMP280_SPI_BUFFER_LEN ] = {0 ,};
+  uint8_t rxarray [ BMP280_SPI_BUFFER_LEN ] = {0 ,};
+  uint8_t stringpos;
 
- txarray [0] = reg_addr ;
+  txarray[0] = reg_addr;
 
- /* Software slave selection procedure */
- if( cs == BMP280_CS1 )
- HAL_GPIO_WritePin ( SPI_CS_GPIO_Port , SPI_CS_Pin , GPIO_PIN_RESET ) ;
+  /* Software slave selection procedure */
+  if(cs == BMP280_CS1)
+    HAL_GPIO_WritePin (SPI_CS_GPIO_Port, SPI_CS_Pin, GPIO_PIN_RESET);
 
- /* Data exchange */
- status = HAL_SPI_TransmitReceive ( BMP280_SPI , ( uint8_t *) (& txarray ) , ( uint8_t *) (&
-rxarray ) , length +1 , 5) ;
- while ( BMP280_SPI -> State == HAL_SPI_STATE_BUSY ) {};
+  /* Data exchange */
+  status = HAL_SPI_TransmitReceive(BMP280_SPI, (uint8_t*)(&txarray), (uint8_t*)(&rxarray), length + 1, 5);
+  while(BMP280_SPI->State == HAL_SPI_STATE_BUSY) {};
 
- /* Disable all slaves */
- HAL_GPIO_WritePin ( SPI_CS_GPIO_Port , SPI_CS_Pin , GPIO_PIN_SET ) ;
+  /* Disable all slaves */
+  HAL_GPIO_WritePin(SPI_CS_GPIO_Port, SPI_CS_Pin, GPIO_PIN_SET);
 
- /* Copy data from rx buffer */
-for ( stringpos = 0; stringpos < length ; stringpos ++)
- {
- reg_data [ stringpos ] = rxarray [ stringpos + BMP280_DATA_INDEX ];
- }
- // memcpy ( reg_data , rxarray + BMP280_DATA_INDEX , length );
+  /* Copy data from rx buffer */
+  for(stringpos = 0; stringpos < length; stringpos++)
+  {
+    reg_data[stringpos] = rxarray[stringpos + BMP280_DATA_INDEX];
+  }
+  // memcpy ( reg_data , rxarray + BMP280_DATA_INDEX , length );
 
- if ( status != HAL_OK )
- {
- // The BME280 API calls for 0 return value as a success , and -1 returned as failure
+  if(status != HAL_OK)
+  {
+   // The BME280 API calls for 0 return value as a success , and -1 returned as failure
+    iError = (-1);
+  }
 
- iError = ( -1) ;
+  return (int8_t)iError;
 }
 
- return ( int8_t ) iError ;
- }
-
- /*!
-  * @brief Function for writing the sensor 's registers through SPI bus.
-  *
- * @param [in] cs : Chip select to enable the sensor .
-  * @param [in] reg_addr : Register address .
-  * @param [in] reg_data : Pointer to the data buffer whose data has to be written
-  * @param [in] length : No of bytes to write .
- *
-  * @return Status of execution
-  * @retval 0 -> Success
-  * @retval >0 -> Failure Info
- *
-  */
-  int8_t bmp280_spi_reg_write ( uint8_t cs , uint8_t reg_addr , uint8_t * reg_data , uint16_t
- length )
- {
+/*!
+* @brief Function for writing the sensor 's registers through SPI bus.
+*
+* @param [in] cs : Chip select to enable the sensor .
+* @param [in] reg_addr : Register address .
+* @param [in] reg_data : Pointer to the data buffer whose data has to be written
+* @param [in] length : No of bytes to write .
+*
+* @return Status of execution
+* @retval 0 -> Success
+* @retval >0 -> Failure Info
+*
+*/
+int8_t bmp280_spi_reg_write(uint8_t cs, uint8_t reg_addr, uint8_t * reg_data, uint16_t length)
+{
   /* Implement the SPI write routine according to the target machine . */
- HAL_StatusTypeDef status = HAL_OK ;
-  int32_t iError = BMP280_OK ;
-  uint8_t txarray [ BMP280_SPI_BUFFER_LEN ];
-  uint8_t stringpos ;
+  HAL_StatusTypeDef status = HAL_OK;
+  int32_t iError = BMP280_OK;
+  uint8_t txarray [BMP280_SPI_BUFFER_LEN];
+  uint8_t stringpos;
 
   /* Copy register address and data to tx buffer */
-  txarray [0] = reg_addr ;
-  for ( stringpos = 0; stringpos < length ; stringpos ++)
+  txarray[0] = reg_addr;
+  for(stringpos = 0; stringpos < length; stringpos++)
   {
-  txarray [ stringpos + BMP280_DATA_INDEX ] = reg_data [ stringpos ];
+    txarray[stringpos + BMP280_DATA_INDEX] = reg_data [stringpos];
   }
  // memcpy ( txarray + BMP280_DATA_INDEX , reg_data , length );
 
   /* Software slave selection procedure */
-  if( cs == BMP280_CS1 )
-  HAL_GPIO_WritePin ( SPI_CS_GPIO_Port , SPI_CS_Pin , GPIO_PIN_RESET ) ;
+  if(cs == BMP280_CS1)
+    HAL_GPIO_WritePin(SPI_CS_GPIO_Port, SPI_CS_Pin, GPIO_PIN_RESET);
 
   /* Data exchange */
-  status = HAL_SPI_Transmit ( BMP280_SPI , ( uint8_t *) (& txarray ) , length +1 , 100) ;
-  while ( BMP280_SPI -> State == HAL_SPI_STATE_BUSY ) {};
+  status = HAL_SPI_Transmit(BMP280_SPI, (uint8_t*)(&txarray), length + 1, 100);
+  while(BMP280_SPI->State == HAL_SPI_STATE_BUSY) {};
 
   /* Disable all slaves */
-  HAL_GPIO_WritePin ( SPI_CS_GPIO_Port , SPI_CS_Pin , GPIO_PIN_SET ) ;
+  HAL_GPIO_WritePin(SPI_CS_GPIO_Port, SPI_CS_Pin, GPIO_PIN_SET);
 
-  if ( status != HAL_OK )
+  if(status != HAL_OK)
   {
-  // The BMP280 API calls for 0 return value as a success , and -1 returned as  failure
-
-  iError = ( -1) ;
+    // The BMP280 API calls for 0 return value as a success , and -1 returned as  failure
+    iError = (-1);
   }
 
-  return ( int8_t ) iError ;
-  }
+  return (int8_t)iError ;
+}
 /* USER CODE END 4 */
 
 /**
@@ -389,4 +416,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-
