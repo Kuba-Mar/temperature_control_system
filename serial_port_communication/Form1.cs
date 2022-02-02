@@ -157,7 +157,7 @@ namespace serial_port_communication
 
         private void Reset_Click(object sender, EventArgs e)
         {
-            string value = "fon";
+            string value = "01";
             serialPort.Write(value);
         }
         private void SendChartbutton_Click(object sender, EventArgs e)

@@ -26,3 +26,17 @@ C:\Users\kubag\Desktop\WinFORMapp\serial_port_communication\obj\Debug\serial_por
 C:\Users\kubag\Desktop\WinFORMapp\serial_port_communication\obj\Debug\serial_port_communication.application
 C:\Users\kubag\Desktop\WinFORMapp\serial_port_communication\obj\Debug\serial_port_communication.exe
 C:\Users\kubag\Desktop\WinFORMapp\serial_port_communication\obj\Debug\serial_port_communication.pdb
+C:\Users\Maksymilian\source\repos\serial-portCommunication\serial_port_communication\bin\Debug\serial_port_communication.exe.config
+C:\Users\Maksymilian\source\repos\serial-portCommunication\serial_port_communication\bin\Debug\serial_port_communication.exe.manifest
+C:\Users\Maksymilian\source\repos\serial-portCommunication\serial_port_communication\bin\Debug\serial_port_communication.application
+C:\Users\Maksymilian\source\repos\serial-portCommunication\serial_port_communication\bin\Debug\serial_port_communication.exe
+C:\Users\Maksymilian\source\repos\serial-portCommunication\serial_port_communication\bin\Debug\serial_port_communication.pdb
+C:\Users\Maksymilian\source\repos\serial-portCommunication\serial_port_communication\obj\Debug\serial_port_communication.csproj.AssemblyReference.cache
+C:\Users\Maksymilian\source\repos\serial-portCommunication\serial_port_communication\obj\Debug\serial_port_communication.Form1.resources
+C:\Users\Maksymilian\source\repos\serial-portCommunication\serial_port_communication\obj\Debug\serial_port_communication.Properties.Resources.resources
+C:\Users\Maksymilian\source\repos\serial-portCommunication\serial_port_communication\obj\Debug\serial_port_communication.csproj.GenerateResource.cache
+C:\Users\Maksymilian\source\repos\serial-portCommunication\serial_port_communication\obj\Debug\serial_port_communication.csproj.CoreCompileInputs.cache
+C:\Users\Maksymilian\source\repos\serial-portCommunication\serial_port_communication\obj\Debug\serial_port_communication.exe.manifest
+C:\Users\Maksymilian\source\repos\serial-portCommunication\serial_port_communication\obj\Debug\serial_port_communication.application
+C:\Users\Maksymilian\source\repos\serial-portCommunication\serial_port_communication\obj\Debug\serial_port_communication.exe
+C:\Users\Maksymilian\source\repos\serial-portCommunication\serial_port_communication\obj\Debug\serial_port_communication.pdb
