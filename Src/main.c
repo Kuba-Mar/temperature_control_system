@@ -29,6 +29,8 @@
 #include "bmp280_defs.h"
 #include "bmp280.h"
 #include "regulator.h"
+#include "lcd_config.h"
+#include "lcd.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -41,6 +43,7 @@
 #define BMP280_SPI (&hspi4)
 #define BMP280_CS1 1
 #define BMP280_CS2 2
+#define LAB   13
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -180,7 +183,10 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim6);
 
   /* Starting the PWM signal generation. */
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+
+  LCD_Init(&hlcd1);
+
 
   /* Receiving set point value from UART in interrupt mode. */
   HAL_UART_Receive_IT(&huart3, &reference_value, 2);
@@ -220,10 +226,10 @@ int main(void)
 	sprintf((char*)msg, "%0.2f \r\n", temp);
 	HAL_UART_Transmit(&huart3,(uint8_t*)msg, strlen(msg), 1000);
 	bmp280_1.delay_ms(1000);
+	LCD_printf(&hlcd1, "TEST");
+    /* USER CODE END WHILE */
 
-  /* USER CODE END WHILE */
-
-  /* USER CODE BEGIN 3 */
+    /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
@@ -416,3 +422,4 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+
