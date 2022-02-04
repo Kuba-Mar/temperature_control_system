@@ -18,6 +18,7 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#include <HD44780.h>
 #include "main.h"
 #include "spi.h"
 #include "tim.h"
@@ -29,8 +30,7 @@
 #include "bmp280_defs.h"
 #include "bmp280.h"
 #include "regulator.h"
-#include "lcd_config.h"
-#include "lcd.h"
+#include "HD44780.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -153,7 +153,7 @@ int main(void)
 
   /* Message read from UART */
   char msg[100];
-
+  char LCD[100];
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -178,15 +178,34 @@ int main(void)
   MX_SPI4_Init();
   MX_TIM3_Init();
   MX_TIM6_Init();
+  MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
    /* Starting the TIM6 Base generation */
   HAL_TIM_Base_Start_IT(&htim6);
+  HAL_TIM_Base_Start(&htim7);
 
   /* Starting the PWM signal generation. */
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+  HAL_TIM_Base_Start(&htim6);
 
-  LCD_Init(&hlcd1);
+  HD44780 lcd = {
+         .rs_gpio = LCD_RS_GPIO_Port,
+         .en_gpio = LCD_E_GPIO_Port,
+         .d4_gpio = LCD_D4_GPIO_Port,
+         .d5_gpio = LCD_D5_GPIO_Port,
+         .d6_gpio = LCD_D6_GPIO_Port,
+         .d7_gpio = LCD_D7_GPIO_Port,
+         .rs_pin = LCD_RS_Pin,
+         .en_pin = LCD_E_Pin,
+         .d4_pin = LCD_D4_Pin,
+         .d5_pin = LCD_D5_Pin,
+         .d6_pin = LCD_D6_Pin,
+         .d7_pin = LCD_D7_Pin,
+  	   .rw_gpio = LCD_RW_GPIO_Port,
+  	   .rw_pin = LCD_RW_Pin,
+     };
 
+     HD44780_init(&lcd);
 
   /* Receiving set point value from UART in interrupt mode. */
   HAL_UART_Receive_IT(&huart3, &reference_value, 2);
@@ -219,14 +238,16 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  rslt = bmp280_get_uncomp_data(&bmp280_1_data, &bmp280_1);
-	  rslt = bmp280_get_comp_temp_double(&temp, bmp280_1_data.uncomp_temp, &bmp280_1);
+	rslt = bmp280_get_uncomp_data(&bmp280_1_data, &bmp280_1);
+	rslt = bmp280_get_comp_temp_double(&temp, bmp280_1_data.uncomp_temp, &bmp280_1);
 
 	/* Displaying temperature in terminal */
 	sprintf((char*)msg, "%0.2f \r\n", temp);
 	HAL_UART_Transmit(&huart3,(uint8_t*)msg, strlen(msg), 1000);
 	bmp280_1.delay_ms(1000);
-	LCD_printf(&hlcd1, "TEST");
+	sprintf(LCD, "Temperatura = %0.2f  C",  temp);
+	HD44780_clear(&lcd);
+	HD44780_put_str(&lcd,LCD);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
