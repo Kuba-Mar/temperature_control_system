@@ -18,7 +18,6 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include <HD44780.h>
 #include "main.h"
 #include "spi.h"
 #include "tim.h"
@@ -153,7 +152,10 @@ int main(void)
 
   /* Message read from UART */
   char msg[100];
+
+  /* Message displaying on LCD*/
   char LCD[100];
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -188,8 +190,10 @@ int main(void)
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
   HAL_TIM_Base_Start(&htim6);
 
+  /* Initialization of LCD dispaly */
   HD44780 lcd = {
          .rs_gpio = LCD_RS_GPIO_Port,
+		 .rw_gpio = LCD_RW_GPIO_Port,
          .en_gpio = LCD_E_GPIO_Port,
          .d4_gpio = LCD_D4_GPIO_Port,
          .d5_gpio = LCD_D5_GPIO_Port,
@@ -201,8 +205,7 @@ int main(void)
          .d5_pin = LCD_D5_Pin,
          .d6_pin = LCD_D6_Pin,
          .d7_pin = LCD_D7_Pin,
-  	   .rw_gpio = LCD_RW_GPIO_Port,
-  	   .rw_pin = LCD_RW_Pin,
+  	     .rw_pin = LCD_RW_Pin,
      };
 
      HD44780_init(&lcd);
@@ -245,6 +248,7 @@ int main(void)
 	sprintf((char*)msg, "%0.2f \r\n", temp);
 	HAL_UART_Transmit(&huart3,(uint8_t*)msg, strlen(msg), 1000);
 	bmp280_1.delay_ms(1000);
+	/* Displaying temperature on LCD */
 	sprintf(LCD, "Temperatura = %0.2f  C",  temp);
 	HD44780_clear(&lcd);
 	HD44780_put_str(&lcd,LCD);

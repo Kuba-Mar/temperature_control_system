@@ -1,8 +1,21 @@
-/*
- *@file regulator.h
- *@date Jan 25, 2022
- *@author Jakub Glab
- */
+/**
+  ******************************************************************************
+  * @file           : regulator.h
+  * @brief          : Header for regulator.c file.
+  *                   This file contains the function prototype for regulator.c file
+  ******************************************************************************
+  * @attention
+  *
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
+  */
 
 #ifndef INC_REGULATOR_H_
 #define INC_REGULATOR_H_
