@@ -1,7 +1,7 @@
 # Temperature control system
 
 # authors: M.Pływaczyk, J.Głąb and J.Marciniak
-Final microprocessor systems project. The goal of the project was to create a temperature control system which allows measuring and controlling the temperature in the specified range. The system was implemented on STM32F746ZG board. To obtain the setpoint value of the temperature, the system uses two position controller implemented in C language. The actuator element is a heater resistor. The current temperature value can be looked up on LCD display in real time, as well as in the desktop application, which has been written in C# language. 
+Final microprocessor systems project. The goal of the project was to create a temperature control system which allows measuring and controlling the temperature in the specified range. The system was implemented on STM32F746ZG board. To obtain the setpoint value of the temperature, the system uses two position controller implemented in C language. The actuator is a heater resistor. The current temperature value can be looked up on LCD display in real time, as well as in the desktop application, which has been written in C# language. 
 
 # Physical Control System
 <p align="center">
